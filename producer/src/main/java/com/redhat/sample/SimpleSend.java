@@ -22,10 +22,14 @@ public class SimpleSend
 
          ConnectionFactory cf = (ConnectionFactory) HornetQJMSClient.createConnectionFactoryWithoutHA(JMSFactoryType.CF,transportConfiguration);
 
+         // Use ./addUser on the Jboss, role=guest with this
          Connection conn = cf.createConnection("guest", "h0rnet0@");
 
          Session session = conn.createSession(true, Session.SESSION_TRANSACTED);
 
+         // create the queue with
+         // jboss-cli
+         // jms-queue add --queue-address=test --entries=queue/test
          Queue  queue = session.createQueue("test");
 
          MessageProducer prod = session.createProducer(queue);
