@@ -15,14 +15,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 @MessageDriven(name = "mdb1",
       activationConfig = {
             @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-            @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/queue/InQueue")})
-@TransactionManagement(value = TransactionManagementType.CONTAINER)
-@TransactionAttribute(value = TransactionAttributeType.REQUIRED)
+            @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/queue/InQueue"),
+            @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge")})
+@TransactionManagement(value = TransactionManagementType.BEAN)
+@TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class ExampleMDB implements MessageListener {
 
    @Resource
    private MessageDrivenContext context;
 
+   //@Resource(mappedName = "java:/jmsXALocal")
    @Resource(mappedName = "java:/JmsXA")
    private ConnectionFactory cf;
 
@@ -34,7 +36,6 @@ public class ExampleMDB implements MessageListener {
       try {
          Thread.sleep(500);
          System.out.println("Message " + m.getStringProperty("count"));
-
 
 
          con = cf.createConnection();
