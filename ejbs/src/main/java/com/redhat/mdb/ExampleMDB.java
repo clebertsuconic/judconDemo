@@ -6,12 +6,18 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
+import javax.annotation.Resource;
+import javax.ejb.*;
+import javax.jms.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
-@MessageDriven(messageListenerInterface = javax.jms.MessageListener.class, activationConfig = {
-    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-    @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/test")
-})
+@MessageDriven(name = "mdb1",
+      activationConfig = {
+            @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+            @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/queue/InQueue")})
+@TransactionManagement(value = TransactionManagementType.CONTAINER)
+@TransactionAttribute(value = TransactionAttributeType.REQUIRED)
 public class ExampleMDB implements MessageListener {
     public void onMessage(Message m) {
         try {
